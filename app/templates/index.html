@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 2rem;
+        }
+        .form-container {
+            padding: 2rem;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .result-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .spinner-border {
+            color: #667eea;
+        }
+        .feature-group {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .feature-group h5 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="main-container">
+                    <!-- Header -->
+                    <div class="header text-center">
+                        <h1><i class="fas fa-car"></i> Car Price Prediction</h1>
+                        <p class="mb-0">Predict car prices using Machine Learning</p>
+                    </div>
+
+                    <!-- Form Container -->
+                    <div class="form-container">
+                        <form id="predictionForm">
+                            <!-- Basic Information -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-info-circle"></i> Basic Information</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="symboling" class="form-label">Safety Rating</label>
+                                        <select class="form-select" id="symboling" name="symboling" required>
+                                            <option value="">Select safety rating</option>
+                                            <option value="-2">-2 (Very Safe)</option>
+                                            <option value="-1">-1 (Safe)</option>
+                                            <option value="0">0 (Average)</option>
+                                            <option value="1">1 (Risky)</option>
+                                            <option value="2">2 (More Risky)</option>
+                                            <option value="3">3 (Very Risky)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="fueltype" class="form-label">Fuel Type</label>
+                                        <select class="form-select" id="fueltype" name="fueltype" required>
+                                            <option value="">Select fuel type</option>
+                                            <option value="0">Gas</option>
+                                            <option value="1">Diesel</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="aspiration" class="form-label">Aspiration</label>
+                                        <select class="form-select" id="aspiration" name="aspiration" required>
+                                            <option value="">Select aspiration</option>
+                                            <option value="0">Standard</option>
+                                            <option value="1">Turbo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Car Details -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-car"></i> Car Details</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="doornumber" class="form-label">Door Number</label>
+                                        <select class="form-select" id="doornumber" name="doornumber" required>
+                                            <option value="">Select doors</option>
+                                            <option value="0">Two</option>
+                                            <option value="1">Four</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="carbody" class="form-label">Car Body</label>
+                                        <select class="form-select" id="carbody" name="carbody" required>
+                                            <option value="">Select body type</option>
+                                            <option value="0">Convertible</option>
+                                            <option value="1">Hardtop</option>
+                                            <option value="2">Hatchback</option>
+                                            <option value="3">Sedan</option>
+                                            <option value="4">Wagon</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="drivewheel" class="form-label">Drive Wheel</label>
+                                        <select class="form-select" id="drivewheel" name="drivewheel" required>
+                                            <option value="">Select drive wheel</option>
+                                            <option value="0">4WD</option>
+                                            <option value="1">FWD</option>
+                                            <option value="2">RWD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="enginelocation" class="form-label">Engine Location</label>
+                                        <select class="form-select" id="enginelocation" name="enginelocation" required>
+                                            <option value="">Select location</option>
+                                            <option value="0">Front</option>
+                                            <option value="1">Rear</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Engine Specifications -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-cog"></i> Engine Specifications</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="enginesize" class="form-label">Engine Size</label>
+                                        <input type="number" class="form-control" id="enginesize" name="enginesize" 
+                                               placeholder="e.g., 130" min="50" max="400" step="1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="horsepower" class="form-label">Horsepower</label>
+                                        <input type="number" class="form-control" id="horsepower" name="horsepower" 
+                                               placeholder="e.g., 111" min="40" max="300" step="1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="peakrpm" class="form-label">Peak RPM</label>
+                                        <input type="number" class="form-control" id="peakrpm" name="peakrpm" 
+                                               placeholder="e.g., 5000" min="4000" max="7000" step="100" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="cylindernumber" class="form-label">Cylinder Number</label>
+                                        <select class="form-select" id="cylindernumber" name="cylindernumber" required>
+                                            <option value="">Select cylinders</option>
+                                            <option value="0">Two</option>
+                                            <option value="1">Three</option>
+                                            <option value="2">Four</option>
+                                            <option value="3">Five</option>
+                                            <option value="4">Six</option>
+                                            <option value="5">Eight</option>
+                                            <option value="6">Twelve</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Engine Details -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-tools"></i> Engine Details</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="enginetype" class="form-label">Engine Type</label>
+                                        <select class="form-select" id="enginetype" name="enginetype" required>
+                                            <option value="">Select engine type</option>
+                                            <option value="0">DOHC</option>
+                                            <option value="1">DOHCV</option>
+                                            <option value="2">L</option>
+                                            <option value="3">OHC</option>
+                                            <option value="4">OHCF</option>
+                                            <option value="5">OHCV</option>
+                                            <option value="6">ROTOR</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="fuelsystem" class="form-label">Fuel System</label>
+                                        <select class="form-select" id="fuelsystem" name="fuelsystem" required>
+                                            <option value="">Select fuel system</option>
+                                            <option value="0">1BBL</option>
+                                            <option value="1">2BBL</option>
+                                            <option value="2">4BBL</option>
+                                            <option value="3">IDI</option>
+                                            <option value="4">MFI</option>
+                                            <option value="5">MPFI</option>
+                                            <option value="6">SPDI</option>
+                                            <option value="7">SPFI</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="boreratio" class="form-label">Bore Ratio</label>
+                                        <input type="number" class="form-control" id="boreratio" name="boreratio" 
+                                               placeholder="e.g., 3.47" min="2.5" max="4.0" step="0.01" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="stroke" class="form-label">Stroke</label>
+                                        <input type="number" class="form-control" id="stroke" name="stroke" 
+                                               placeholder="e.g., 2.68" min="2.0" max="4.5" step="0.01" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dimensions -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-ruler-combined"></i> Dimensions</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="wheelbase" class="form-label">Wheelbase</label>
+                                        <input type="number" class="form-control" id="wheelbase" name="wheelbase" 
+                                               placeholder="e.g., 88.6" min="80" max="120" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="carlength" class="form-label">Car Length</label>
+                                        <input type="number" class="form-control" id="carlength" name="carlength" 
+                                               placeholder="e.g., 168.8" min="140" max="220" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="carwidth" class="form-label">Car Width</label>
+                                        <input type="number" class="form-control" id="carwidth" name="carwidth" 
+                                               placeholder="e.g., 64.1" min="60" max="75" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="carheight" class="form-label">Car Height</label>
+                                        <input type="number" class="form-control" id="carheight" name="carheight" 
+                                               placeholder="e.g., 48.8" min="45" max="60" step="0.1" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weight and Performance -->
+                            <div class="feature-group">
+                                <h5><i class="fas fa-weight-hanging"></i> Weight and Performance</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="curbweight" class="form-label">Curb Weight</label>
+                                        <input type="number" class="form-control" id="curbweight" name="curbweight" 
+                                               placeholder="e.g., 2548" min="1500" max="4500" step="1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="compressionratio" class="form-label">Compression Ratio</label>
+                                        <input type="number" class="form-control" id="compressionratio" name="compressionratio" 
+                                               placeholder="e.g., 9.0" min="7.0" max="25.0" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="citympg" class="form-label">City MPG</label>
+                                        <input type="number" class="form-control" id="citympg" name="citympg" 
+                                               placeholder="e.g., 21" min="10" max="50" step="1" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="highwaympg" class="form-label">Highway MPG</label>
+                                        <input type="number" class="form-control" id="highwaympg" name="highwaympg" 
+                                               placeholder="e.g., 27" min="15" max="60" step="1" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hidden fields for remaining features -->
+                            <input type="hidden" name="car_ID" value="1">
+                            <input type="hidden" name="CarName" value="0">
+
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-predict btn-lg">
+                                    <i class="fas fa-magic"></i> Predict Price
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Loading Spinner -->
+                        <div class="loading" id="loading">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Analyzing car specifications...</p>
+                        </div>
+
+                        <!-- Result Card -->
+                        <div class="result-card" id="resultCard">
+                            <h3><i class="fas fa-dollar-sign"></i> Predicted Price</h3>
+                            <h2 id="predictedPrice" class="display-4 fw-bold">$0</h2>
+                            <p class="mb-0">Based on the provided specifications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultCard').style.display = 'none';
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Convert all values to numbers
+            for (let [key, value] of formData.entries()) {
+                data[key] = parseFloat(value) || 0;
+            }
+            
+            // Ensure all required features are present with default values
+            const requiredFeatures = [
+                'car_ID', 'symboling', 'CarName', 'fueltype', 'aspiration', 'doornumber', 
+                'carbody', 'drivewheel', 'enginelocation', 'wheelbase', 'carlength', 
+                'carwidth', 'carheight', 'curbweight', 'enginetype', 'cylindernumber', 
+                'enginesize', 'fuelsystem', 'boreratio', 'stroke', 'compressionratio', 
+                'horsepower', 'peakrpm', 'citympg', 'highwaympg'
+            ];
+            
+            // Add missing features with default values
+            requiredFeatures.forEach(feature => {
+                if (!(feature in data)) {
+                    data[feature] = 0;
+                }
+            });
+            
+            try {
+                // Make prediction request
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                
+                if (result.success) {
+                    // Show result
+                    document.getElementById('predictedPrice').textContent = `$${result.predicted_price.toLocaleString()}`;
+                    document.getElementById('resultCard').style.display = 'block';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+                
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                alert('Error making prediction: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html> 
