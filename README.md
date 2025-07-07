@@ -96,10 +96,10 @@ car-price-prediction/
 
 | Model | RMSE | MAE | R² Score |
 |-------|------|-----|----------|
-| Linear Regression | ~$3,200 | ~$2,400 | ~0.85 |
-| Decision Tree | ~$2,800 | ~$2,100 | ~0.88 |
-| Random Forest | ~$2,400 | ~$1,800 | ~0.92 |
-| XGBoost | ~$2,200 | ~$1,700 | ~0.93 |
+| Linear Regression | ~3,200 | ~2,400 | ~0.85 |
+| Decision Tree | ~2,800 | ~2,100 | ~0.88 |
+| Random Forest | ~2,400 | ~1,800 | ~0.92 |
+| XGBoost | ~2,200 | ~1,700 | ~0.93 |
 
 **Best Performing Model**: XGBoost with R² = 0.93
 
@@ -126,7 +126,6 @@ car-price-prediction/
 1. **Ensemble Methods Excel**: Random Forest and XGBoost significantly outperform simpler models
 2. **Feature Importance**: Engine size, horsepower, and curb weight are top predictors
 3. **Model Interpretability**: Decision Tree provides good balance between performance and interpretability
-4. **Overfitting Prevention**: Cross-validation ensures model generalization
 
 ## 🛠️ Usage
 
