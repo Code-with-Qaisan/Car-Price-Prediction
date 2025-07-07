@@ -59,7 +59,7 @@ car-price-prediction/
 1. **Clone the repository**
    ```bash
    git clone https://github.com/Code-with-Qaisan/Car-Price-Prediction.git
-   cd car-price-prediction
+   cd Car-Price-Prediction
    ```
 
 2. **Install dependencies**
